@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <h2>User Dashboard</h2>
+
+  {% if reserved %}
+    <div class="alert alert-info">
+      You have already reserved a spot.
+      <a href="/user/release" class="btn btn-sm btn-warning ms-2">Release</a>
+    </div>
+  {% endif %}
+
+  {% for lot in lots %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">{{ lot.name }}</h5>
+        <p class="card-text">
+          <strong>Address:</strong> {{ lot.address }}<br>
+          <strong>PIN:</strong> {{ lot.pin }}<br>
+          <strong>Price:</strong> ₹{{ lot.price }}<br>
+          <strong>Available Spots:</strong> {{ availability[lot.id] }} / {{ lot.max_spots }}
+        </p>
+        {% if not reserved %}
+          {% if availability[lot.id] > 0 %}
+            <a href="/user/reserve/{{ lot.id }}" class="btn btn-success">Reserve</a>
+          {% else %}
+            <button class="btn btn-secondary" disabled>No Spots Available</button>
+          {% endif %}
+        {% else %}
+          <button class="btn btn-secondary" disabled>Already Reserved</button>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+{% endblock %}
